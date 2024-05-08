@@ -1,25 +1,42 @@
 -- Data Cleaning
+
+**Step 1: Database Setup**
 	
     create database layoff_database;
     
     use layoff_database;
     
-    -- select data
     
 select * from LAYOFFS;
 
--- 1. Remove Dublicates
--- 2. Standardize the Data
--- 3. Null values And Black 
--- 4. Remove Any Columns
+
+
+**Step 2: Create a Clean Table**
 
 create table LAYOFFS2
 like LAYOFFS;
 
-select * from LAYOFFS2;
+
+
+CREATE TABLE `clean_layoffs` (
+  `company` text,
+  `location` text,
+  `industry` text,
+  `total_laid_off` int DEFAULT NULL,
+  `percentage_laid_off` text,
+  `date` text,
+  `stage` text,
+  `country` text,
+  `funds_raised_millions` int DEFAULT NULL,
+  `row_num` int
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
 
 insert LAYOFFS2
 select * from LAYOFFS;
+
+**Step 3: Remove Duplicates**
+	-- Identify and remove duplicates
 
 select *,
 row_number () over(
@@ -36,21 +53,7 @@ from LAYOFFS)
 select * from DUBLICATE_CTE 
 where row_num > 1;
 
-select * from layoffs2
-where company = 'olist';
 
-CREATE TABLE `clean_layoffs` (
-  `company` text,
-  `location` text,
-  `industry` text,
-  `total_laid_off` int DEFAULT NULL,
-  `percentage_laid_off` text,
-  `date` text,
-  `stage` text,
-  `country` text,
-  `funds_raised_millions` int DEFAULT NULL,
-  `row_num` int
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 select * from CLEAN_LAYOFFS;
 
@@ -72,7 +75,9 @@ where ROW_NUM > 1;
 
 select * from CLEAN_LAYOFFS;
 
--- Standardizing Data
+
+**Step 4: Standardizing Data**
+
 
 select distinct (trim(COMPANY)),COMPANY
 from CLEAN_LAYOFFS;
@@ -133,13 +138,13 @@ modify `date` date;
 
 
 
+**Step 5: Handle Null Values**
+
 
 select * from CLEAN_LAYOFFS
 where INDUSTRY is null
 or INDUSTRY = '';
 
-select * from CLEAN_LAYOFFS
-where COMPANY like 'bally%';
 
 select * from CLEAN_LAYOFFS T1
 join CLEAN_LAYOFFS T2
@@ -169,6 +174,9 @@ where TOTAL_lAID_OFF is null
 and PERCENTAGE_LAID_OFF is null;  
 
 select * from CLEAN_LAYOFFS;
+
+**Step 7: Final Cleanup**
+	-- Drop temporary row number column
 
 alter table CLEAN_LAYOFFS
 drop column ROW_NUM;
