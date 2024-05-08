@@ -1,4 +1,6 @@
--- Data Cleaning
+ /* This project involves the cleaning and standardization of layoffs data using MySQL. 
+The data cleaning process is organized into several steps, each aimed at improving the quality 
+and consistency of the dataset.*/
 
 **Step 1: Database Setup**
 	
